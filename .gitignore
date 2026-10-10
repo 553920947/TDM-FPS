@@ -1,0 +1,29 @@
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Uu]ser[Ss]ettings/
+.refact/
+
+# PackageCache 缓存（在Library下面，上面Library/已经包含，这里兜底）
+Library/PackageCache/
+
+# Keep Unity .meta files (CRITICAL)
+# 不要注释掉Assets下meta，保留meta，不要忽略
+# !Assets/**/*.meta 是白名单，下面不能写 Assets/**/*.meta
+# Assets/**/*.meta 这一行删掉！
+
+# Visual Studio / Rider IDE
+.vs/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+
+# 备份文件
+Packages/manifest.json.orig
