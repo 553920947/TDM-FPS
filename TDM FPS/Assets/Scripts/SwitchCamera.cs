@@ -10,6 +10,7 @@ public class SwitchCamera : MonoBehaviour
 
     private void Update()
     {
+        // Fire2是鼠标右键，用于切换相机，W键或上箭头键用于瞄准相机
         if (Input.GetButton("Fire2") && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) // 检测是否按下Fire2键（W键或上箭头键）
         {
             ThirdPersonCam.SetActive(false); // 禁用第三人称相机

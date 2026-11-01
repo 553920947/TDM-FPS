@@ -2,12 +2,35 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
+// 步枪脚本：挂在玩家枪械物体上，负责监听开火输入、发射射线检测命中的目标并造成伤害
 public class Rifle : MonoBehaviour
 {
     [Header("Rifle")] 
-    public Camera cam; // 相机引用：用于获取射击起点（相机位置）和射击方向（相机前方），必须在Inspector中赋值，否则射击时报错
-    public float giveDamage = 10f; // 枪械造成的伤害值：命中目标时实际扣血量（本脚本当前只打印目标名，供后续伤害逻辑使用）
+    public Camera cam; // 相机引用：用于获取射击起点（相机位置）和射击方向（相机前方）；可在Inspector手动赋值，也可留空由代码自动解析当前激活相机
+    public float giveDamage = 10f; // 枪械造成的伤害值：命中目标时每次扣除的生命值
     public float shootingRange = 100f; // 枪械射击范围：射线检测的最大距离（单位：米）
+
+    private void Start()
+    {
+        ResolveCam(); // 启动时自动解析一次相机，避免第一枪时cam为空
+    }
+
+    // 修复：自动解析当前激活的相机（AimCam或ThirdPersonCam谁激活用谁），未手动赋值时兜底；已手动赋值则不覆盖
+    private void ResolveCam()
+    {
+        if (cam != null)
+        {
+            return;
+        }
+        foreach (Camera c in Camera.allCameras) // 只返回场景中已启用且在激活物体上的相机
+        {
+            if (c != null && c.gameObject.activeInHierarchy)
+            {
+                cam = c;
+                break;
+            }
+        }
+    }
 
     private void Update()
     {
@@ -18,9 +41,10 @@ public class Rifle : MonoBehaviour
         }
     }
 
-    void Shoot() // 射击方法：从相机位置沿相机正前方发射射线，检测是否命中物体
+    void Shoot() // 射击方法：从相机位置沿相机正前方发射射线，检测是否命中物体并造成伤害
     {
-        // 防御：cam未在Inspector赋值时直接返回，避免UnassignedReferenceException；完成第一步赋值后射击恢复正常
+        // 防御：每次射击前先尝试自动解析相机（防止相机切换后引用失效），解析不到则直接返回，杜绝UnassignedReferenceException
+        ResolveCam();
         if (cam == null)
         {
             return;
@@ -29,14 +53,19 @@ public class Rifle : MonoBehaviour
         RaycastHit hitInfo; // 射线检测信息：用于接收被射线命中的物体的详细信息
 
         // 执行射线检测：从相机位置沿相机正前方发射射线，检测距离为shootingRange；命中物体时hitInfo填充信息并返回true
-        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hitInfo, shootingRange))
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hitInfo, shootingRange))
         {
-            Debug.Log(hitInfo.transform.name); // 在Console窗口输出被命中物体的名称
+            Debug.Log(hitInfo.transform.name); // 在Console窗口输出被命中物体的名称，便于验证射击是否命中
+
+            Objects objects = hitInfo.transform.GetComponent<Objects>(); // 获取被命中物体上的Objects组件（实现扣血和销毁）
+
+            if (objects != null) // 命中物带Objects组件时才扣血（如敌人/目标物），普通地面墙体等不会误伤
+            {
+                objects.objectHitDamage(giveDamage); // 调用objectHitDamage方法，扣除giveDamage点生命值
+            }
         }
     }
 }
-
-
 
 
 

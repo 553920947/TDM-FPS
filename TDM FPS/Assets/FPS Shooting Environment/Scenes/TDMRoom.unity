@@ -3228,6 +3228,7 @@ GameObject:
   - component: {fileID: 1565235366}
   - component: {fileID: 1565235368}
   - component: {fileID: 1565235367}
+  - component: {fileID: 1565235370}
   - component: {fileID: 1565235369}
   m_Layer: 12
   m_Name: Wood Crate A (4)
@@ -3308,8 +3309,8 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1565235365}
   m_Mesh: {fileID: 209039640186285891, guid: a6e8556bd858ae848aed7d0f1b48edbd, type: 3}
---- !u!64 &1565235369
-MeshCollider:
+--- !u!65 &1565235369
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3326,10 +3327,22 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 209039640186285891, guid: a6e8556bd858ae848aed7d0f1b48edbd, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 4.090265, y: 4.084544, z: 4.084862}
+  m_Center: {x: -0.0000019073486, y: -0.0000010728836, z: -0.0000019073486}
+--- !u!114 &1565235370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565235365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b5569ac37aa49d488e41c45f2ce66b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Objects
+  objectHealth: 100
 --- !u!1 &1570951104
 GameObject:
   m_ObjectHideFlags: 0
