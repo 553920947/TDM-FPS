@@ -2673,6 +2673,7 @@ MonoBehaviour:
   playerCamera: {fileID: 139703016}
   cC: {fileID: 1007276032}
   gravity: -9.81
+  animator: {fileID: 1007276031}
   jumpRange: 1
   turnCalmTime: 0.1
   surfaceCheck: {fileID: 1058304235}

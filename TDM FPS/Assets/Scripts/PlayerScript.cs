@@ -20,6 +20,7 @@ public class PlayerScript : MonoBehaviour
     [Header("Player Animator and Gravity")]
     public CharacterController cC;  // 角色控制器组件，用于处理玩家移动和碰撞
     public float gravity = -9.81f;  // 重力加速度，默认值为-9.81，用于模拟玩家下落的效果
+    public Animator animator;  // 玩家动画控制器组件，用于控制玩家的动画状态
 
     [Header("Player Jumping & velocity")]
     public float jumpRange = 1f;  // 玩家跳跃范围，默认值为1f，用于模拟玩家跳跃的效果
@@ -64,6 +65,13 @@ public class PlayerScript : MonoBehaviour
 
         if(direction.magnitude >= 0.1f)
         {
+            animator.SetBool("Walk", true);  // 设置动画参数"Walk"为true，触发行走动画
+            animator.SetBool("Running", false); // 设置动画参数"Running"为false，停止触发奔跑动画
+            animator.SetBool("Idle", false); // 设置动画参数"Idle"为false，停止触发待机动画
+            animator.SetTrigger("Jump"); // 设置动画参数"Jump"为false，停止触发跳跃动画
+            animator.SetBool("AimWalk", false); // 设置动画参数"AimWalk"为false，停止触发瞄准行走动画
+            animator.SetBool("IdleAim", false); // 设置动画参数"IdleAim"为false，停止触发瞄准待机动画
+
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y; // 计算目标角度，使用Atan2函数将方向向量转换为角度，并加上摄像机的旋转角度，使玩家面向移动方向
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, turnCalmTime);  // 平滑过渡当前角度到目标角度，使用SmoothDampAngle函数实现平滑旋转
             transform.rotation = Quaternion.Euler(0f, angle, 0f);  // 将玩家的旋转设置为目标角度，使玩家面向移动方向
@@ -72,6 +80,15 @@ public class PlayerScript : MonoBehaviour
             cC.Move(moveDirection.normalized * playerSpeed * Time.deltaTime);  // 根据方向向量和移动速度，计算玩家的移动距离，并使用角色控制器组件进行移动
             currentPlayerSpeed = playerSpeed;
         }
+        else
+        {
+            animator.SetBool("Idle", true); // 设置动画参数"Idle"为true，触发待机动画
+            animator.SetTrigger("Jump"); // 设置动画参数"Jump"为false，停止触发跳跃动画
+            animator.SetBool("Walk", false);  // 设置动画参数"Walk"为false，停止触发行走动画
+            animator.SetBool("Running", false); // 设置动画参数"Running"为false，停止触发奔跑动画
+            animator.SetBool("AimWalk", false); // 设置动画参数"AimWalk"为false，停止触发瞄准行走动画
+            currentPlayerSpeed = 0f; // 玩家当前移动速度为0
+        }
     }
 
     void Jump()
@@ -79,11 +96,17 @@ public class PlayerScript : MonoBehaviour
     // 检测是否按下跳跃键且角色在地面上
         if(Input.GetButtonDown("Jump") && onSurface)
         {
+            animator.SetBool("Walk", false);  // 设置动画参数"Walk"为false，停止触发行走动画
+            animator.SetTrigger("Jump"); // 设置动画参数"Jump"为true，触发跳跃动画
         // 使用物理公式计算初始跳跃速度
         // velocity.y = Mathf.Sqrt(jumpRange * -2 * gravity);
         // 这里的jumpRange应该是跳跃高度，gravity是重力加速度
            velocity.y = Mathf.Sqrt(jumpRange * -2 * gravity);   
         
+        }
+        else
+        {
+            animator.ResetTrigger("Jump"); // 重置动画参数"Jump"，停止触发跳跃动画
         }
     }
 
@@ -100,6 +123,11 @@ public class PlayerScript : MonoBehaviour
 
             if(direction.magnitude >= 0.1f)
             {
+                animator.SetBool("Running", true); // 设置动画参数"Running"为true，触发奔跑动画
+                animator.SetBool("Idle", false);  // 设置动画参数"Idle"为false，停止触发待机动画
+                animator.SetBool("Walk", false); // 设置动画参数"Walk"为false，停止触发行走动画
+                animator.SetBool("IdleAim", false); // 设置动画参数"IdleAim"为false，停止触发瞄准待机动画
+
                 float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y; // 计算目标角度，使用Atan2函数将方向向量转换为角度，并加上摄像机的旋转角度，使玩家面向移动方向
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, turnCalmTime);  // 平滑过渡当前角度到目标角度，使用SmoothDampAngle函数实现平滑旋转
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);  // 将玩家的旋转设置为目标角度，使玩家面向移动方向
@@ -107,9 +135,15 @@ public class PlayerScript : MonoBehaviour
                 Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;  // 根据目标角度计算移动方向向量
                 cC.Move(moveDirection.normalized * playerSprint * Time.deltaTime);  // 根据方向向量和冲刺速度，计算玩家的移动距离，并使用角色控制器组件进行移动
                 currentPlayerSprint = playerSprint;  // 更新玩家当前冲刺速度
-            } 
+            }
+            else
+            {
+                animator.SetBool("Idle", false);
+                animator.SetBool("Walk", false);
+                currentPlayerSprint = 0f; 
+            }
         }
-        
+                
     }
 }
 
