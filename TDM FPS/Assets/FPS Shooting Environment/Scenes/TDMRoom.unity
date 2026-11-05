@@ -8161,9 +8161,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0f1a81f80183d4f888f3eebf46ad0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Rifle
-  cam: {fileID: 0}
+  cam: {fileID: 139703015}
   giveDamage: 10
   shootingRange: 100
+  fireCharge: 15
+  player: {fileID: 1007276033}
+  reloadingTime: 1.3
 --- !u!114 &33387950824221624
 MonoBehaviour:
   m_ObjectHideFlags: 0
