@@ -8183,6 +8183,7 @@ MonoBehaviour:
   AimCanvas: {fileID: 2019246516}
   ThirdPersonCam: {fileID: 1033720606022779253}
   ThirdPersonCanvas: {fileID: 754087381}
+  animator: {fileID: 1007276031}
 --- !u!33 &33445734630475684
 MeshFilter:
   m_ObjectHideFlags: 0
