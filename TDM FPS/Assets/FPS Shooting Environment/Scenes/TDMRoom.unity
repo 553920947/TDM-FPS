@@ -8166,6 +8166,7 @@ MonoBehaviour:
   shootingRange: 100
   fireCharge: 15
   player: {fileID: 1007276033}
+  animator: {fileID: 1007276031}
   reloadingTime: 1.3
 --- !u!114 &33387950824221624
 MonoBehaviour:

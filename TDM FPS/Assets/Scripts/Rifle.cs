@@ -11,6 +11,7 @@ public class Rifle : MonoBehaviour
     public float shootingRange = 100f; // 枪械射击范围：射线检测的最大距离（单位：米）
     public float fireCharge = 15f; // 枪械开火冷却时间：开火后多少秒内不能再次开火（单位：秒）
     public PlayerScript player; // 玩家脚本引用：用于获取玩家的生命值和装填状态
+    public Animator animator; // 动画控制器引用：用于控制枪械的开火和装填动画状态
 
     [Header("Rifle Ammunition and shooting")]
     private float nextTimeToShoot = 0f; // 下一次开火的时间点：用于记录上一次开火后多少秒内不能再次开火（单位：秒）
@@ -61,9 +62,32 @@ public class Rifle : MonoBehaviour
 
         if(Input.GetButton("Fire1") && Time.time >= nextTimeToShoot) // 检测是否按下开火键：Fire1对应Input Manager中的Fire1轴（默认绑定鼠标左键）；且当前时间点大于等于下一次开火时间点
         {
+            animator.SetBool("Fire", true); // 设置动画状态为开火状态
+            animator.SetBool("Idle", false); // 设置动画状态为非空闲状态
+
             nextTimeToShoot = Time.time + 1f/fireCharge; // 更新下一次开火时间点：当前时间点 + 开火冷却时间
             Shoot(); // 调用Shoot方法执行一次射击
         }
+        else if (Input.GetButton("Fire1") && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) // 检测是否按下开火键：Fire1对应Input Manager中的Fire1轴（默认绑定W或上箭头键）；且当前时间点大于等于下一次开火时间点
+        {
+            animator.SetBool("Idle", false); // 设置动画状态为非空闲状态
+            animator.SetBool("FireWalk", true); // 设置动画状态为开火行走状态
+        }
+        else if (Input.GetButton("Fire1") && Input.GetButton("Fire2")) // 检测是否按下开火键：Fire1对应Input Manager中的Fire1轴（默认绑定鼠标左键）；且当前时间点大于等于下一次开火时间点
+        {
+            animator.SetBool("Idle", false);  // 设置动画状态为非空闲状态
+            animator.SetBool("IdleAim", true); // 设置动画状态为瞄准状态
+            animator.SetBool("FireWalk", true); // 设置动画状态为开火行走状态
+            animator.SetBool("Walk", true); // 设置动画状态为行走状态
+            animator.SetBool("Reloading", false); // 设置动画状态为非装填状态
+        }
+        else
+        {
+            animator.SetBool("Fire", false);  // 设置动画状态为非开火状态
+            animator.SetBool("Idle", true); // 设置动画状态为空闲状态
+            animator.SetBool("FireWalk", false); // 设置动画状态为非开火行走状态
+        }
+        
         
     }
 
@@ -113,8 +137,10 @@ public class Rifle : MonoBehaviour
         setReloading = true; // 设置装填状态为true，防止在装填过程中再次开火
         Debug.Log("Reloading..."); // 在Console窗口输出装填提示
         // animtion and audio  
+        animator.SetBool("Reloading", true); // 设置动画状态为装填状态
         yield return new WaitForSeconds(reloadingTime); // 等待装填时间结束 
         // animation 
+        animator.SetBool("Reloading", false); // 设置动画状态为非装填状态
         presentAmmunition = maximumAmmunition; // 装填完成后将当前弹药量恢复为最大弹药量
         player.playerSpeed = 1.9f; // 装填完成后恢复玩家速度
         player.playerSprint = 3f; // 装填完成后恢复玩家冲刺速度
