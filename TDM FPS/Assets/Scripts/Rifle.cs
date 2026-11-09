@@ -23,6 +23,7 @@ public class Rifle : MonoBehaviour
 
     [Header("Rifle Effects")]
     public ParticleSystem muzzleSpark; // 枪口火花特效：用于模拟枪械开火时的火花效果
+    public GameObject WoodedEffect; // 命中特效：用于模拟枪械命中目标时的特效
 
     private void Start()
     {
@@ -130,6 +131,8 @@ public class Rifle : MonoBehaviour
             if (objects != null) // 命中物带Objects组件时才扣血（如敌人/目标物），普通地面墙体等不会误伤
             {
                 objects.objectHitDamage(giveDamage); // 调用objectHitDamage方法，扣除giveDamage点生命值
+                GameObject WoodGo = Instantiate(WoodedEffect, hitInfo.point, Quaternion.LookRotation(hitInfo.normal)); // 在命中点生成命中特效，旋转方向为法线方向
+                Destroy(WoodGo, 1f); // 命中特效持续1秒后销毁
             }
         }
     }

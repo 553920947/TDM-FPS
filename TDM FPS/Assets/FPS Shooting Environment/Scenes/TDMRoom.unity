@@ -8170,6 +8170,7 @@ MonoBehaviour:
   animator: {fileID: 1007276031}
   reloadingTime: 1.3
   muzzleSpark: {fileID: 8040219038556317672}
+  WoodedEffect: {fileID: 2867618450376107503, guid: efe07bf31b6fea04cb29b40ec09e0331, type: 3}
 --- !u!114 &33387950824221624
 MonoBehaviour:
   m_ObjectHideFlags: 0
