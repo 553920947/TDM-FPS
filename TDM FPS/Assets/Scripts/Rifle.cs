@@ -21,6 +21,9 @@ public class Rifle : MonoBehaviour
     public float reloadingTime = 1.3f; // 装填时间：枪械装填子弹所需的时间（单位：秒）
     private bool setReloading = false; // 是否正在装填：用于控制装填状态，防止在装填过程中再次开火
 
+    [Header("Rifle Effects")]
+    public ParticleSystem muzzleSpark; // 枪口火花特效：用于模拟枪械开火时的火花效果
+
     private void Start()
     {
         ResolveCam(); // 启动时自动解析一次相机，避免第一枪时cam为空
@@ -113,6 +116,7 @@ public class Rifle : MonoBehaviour
             mag--; // 扣除当前弹药量：每次开火消耗一发子弹
         }
 
+        muzzleSpark.Play(); // 播放枪口火花特效：模拟枪械开火时的火花效果
 
         RaycastHit hitInfo; // 射线检测信息：用于接收被射线命中的物体的详细信息
 
