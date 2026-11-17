@@ -5,6 +5,10 @@ using System.Collections.Generic;
 // 玩家控制器脚本，继承自MonoBehaviour以实现Unity组件功能
 public class PlayerScript : MonoBehaviour
 {
+    [Header("Player Health Things")]
+    private float playerHealth = 2000f; // 玩家初始生命值
+    private float presentHealth; // 玩家当前生命值
+
     // [Header]属性用于在Inspector窗口中创建分组标题，提高代码可读性
     // "Player Movement"分组标题下的变量，用于控制玩家移动
     [Header("Player Movement")]
@@ -34,7 +38,8 @@ public class PlayerScript : MonoBehaviour
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked; // 锁定鼠标光标，使鼠标光标始终位于屏幕中心
+        presentHealth = playerHealth; // 初始化当前生命值为初始生命值
     }
 
     void Update()
@@ -144,6 +149,23 @@ public class PlayerScript : MonoBehaviour
             }
         }
                 
+    }
+
+    public void playerHitDamage(float takeDamage)
+    {
+        presentHealth -= takeDamage; // 扣除玩家当前生命值
+        
+        if(presentHealth <= 0)
+        {
+            PlayerDie(); // 如果玩家当前生命值小于等于0，调用playerDie方法处理玩家死亡
+        }
+    }
+
+    private void PlayerDie()
+    {
+        Cursor.lockState = CursorLockMode.None; // 解锁鼠标光标，使鼠标光标可以自由移动
+
+        Object.Destroy(gameObject); // 销毁玩家对象，使玩家从场景中消失
     }
 }
 

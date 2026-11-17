@@ -5,7 +5,9 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    [Header("Enemy Health and Damage")]
+    [Header("Enemy Health and Damage")] // 敌人的生命值和伤害值
+    private float enemyHealth = 120f; // 敌人的生命值
+    private float presentHealth; // 敌人的当前生命值
     public float giveDamage = 5f; // 敌人造成的伤害值
     public float enemySpeed; // 敌人的移动速度
 
@@ -30,6 +32,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         enemyAgent = GetComponent<NavMeshAgent>(); // 获取敌人的导航代理组件
+        presentHealth = enemyHealth; // 敌人的当前生命值为敌人的生命值    
     }
 
     private void Update()
@@ -62,6 +65,13 @@ public class Enemy : MonoBehaviour
             if(Physics.Raycast(ShootingRaycastArea.transform.position, ShootingRaycastArea.transform.forward, out hit, shootingRadius))
             {
                 Debug.Log("Shooting" + hit.transform.name);
+
+                PlayerScript playerBody = hit.transform.GetComponent<PlayerScript>(); // 获取玩家的脚本组件
+
+                if(playerBody != null)
+                {
+                    playerBody.playerHitDamage(giveDamage); // 调用玩家的受伤方法，传入敌人造成的伤害值
+                }
             }
         }
 
@@ -72,5 +82,25 @@ public class Enemy : MonoBehaviour
     private void ActiveShooting()
     {
         previouslyShoot = false; 
+    }
+
+    public void enemyHitDamage(float takeDamage) // 敌人受到伤害的方法
+    {
+        presentHealth -= takeDamage; // 敌人受到伤害，减少当前生命值
+
+        if(presentHealth <= 0)
+        {
+            Respawn(); // 如果当前生命值小于等于0，调用重生方法
+        }
+    }
+
+    void Respawn()
+    {
+        enemyAgent.SetDestination(transform.position); // 停止移动，保持当前位置
+        enemySpeed = 0f; // 敌人速度为0，无法移动
+        shootingRadius = 0f; // 敌人射击范围为0，无法射击
+        visionRadius = 0f; // 敌人视野范围半径为0，无法检测玩家
+        playerInvisionRadius = false; // 玩家不在敌人的视野范围内
+        playerInshootingRadius = false; // 玩家不在敌人的射击范围内
     }
 }
