@@ -17,6 +17,8 @@ public class Enemy : MonoBehaviour
     public GameObject ShootingRaycastArea; // 敌人的射击射线检测区域
     public Transform playerBody; // 玩家的主体变换组件 
     public LayerMask PlayerLayer; // 玩家所在的图层
+    public Transform Spawn; // 敌人的重生点变换组件
+    public Transform EnemyCharacter; // 敌人的角色变换组件
 
     [Header("Enemy Shooting Var")]
     public float timebtwShoot; 
@@ -90,11 +92,11 @@ public class Enemy : MonoBehaviour
 
         if(presentHealth <= 0)
         {
-            Respawn(); // 如果当前生命值小于等于0，调用重生方法
+            StartCoroutine(Respawn()); // 调用重生方法，传入敌人死亡的等待时间
         }
     }
 
-    void Respawn()
+    IEnumerator Respawn()
     {
         enemyAgent.SetDestination(transform.position); // 停止移动，保持当前位置
         enemySpeed = 0f; // 敌人速度为0，无法移动
@@ -102,5 +104,27 @@ public class Enemy : MonoBehaviour
         visionRadius = 0f; // 敌人视野范围半径为0，无法检测玩家
         playerInvisionRadius = false; // 玩家不在敌人的视野范围内
         playerInshootingRadius = false; // 玩家不在敌人的射击范围内
+
+        // animations // 播放敌人死亡动画
+
+        Debug.Log("已死亡！"); // 打印日志，通知敌人已死亡
+        
+        yield return new WaitForSeconds(5f); // 等待5秒后重生
+        // 重生逻辑
+
+        Debug.Log("已重生！"); // 打印日志，通知敌人已重生
+
+        presentHealth = 120f; // 重生后恢复敌人的生命值
+        enemySpeed = 3f; // 重生后恢复敌人的移动速度
+        shootingRadius = 10f; // 重生后恢复敌人的射击范围
+        visionRadius = 100f; // 重生后恢复敌人的视野范围半径
+        playerInvisionRadius = true; // 玩家在敌人的视野范围内
+        playerInshootingRadius = false; // 玩家不在敌人的射击范围内
+
+        // animations // 播放敌人重生动画
+
+        // spawn point // 设置敌人的重生点位置
+        EnemyCharacter.position = Spawn.position; // 将敌人的位置设置为重生点的位置
+        Pursueplayer(); // 追踪玩家
     }
 }
