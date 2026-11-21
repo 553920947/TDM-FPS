@@ -17418,7 +17418,7 @@ Animator:
   m_GameObject: {fileID: 3264289916506885604}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 9bda5fe00f13b104b866a57e1b4fbe86, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 33106e5cbcf111f48adc7213556cda42, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -20309,7 +20309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   giveDamage: 5
-  enemySpeed: 3
+  enemySpeed: 1.5
   enemyAgent: {fileID: 3267883157512547616}
   LookPoint: {fileID: 416096008}
   ShootingRaycastArea: {fileID: 691720519}
@@ -20319,9 +20319,10 @@ MonoBehaviour:
     m_Bits: 64
   Spawn: {fileID: 1070096978}
   EnemyCharacter: {fileID: 3267883157512547614}
-  timebtwShoot: 3
+  timebtwShoot: 5
+  anim: {fileID: 3178075445125518720}
   visionRadius: 100
-  shootingRadius: 18
+  shootingRadius: 10
   playerInvisionRadius: 0
   playerInshootingRadius: 0
   isPlayer: 0

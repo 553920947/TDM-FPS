@@ -24,6 +24,9 @@ public class Enemy : MonoBehaviour
     public float timebtwShoot; 
     bool previouslyShoot; 
 
+    [Header("Enemy Animations and Spark effect")]
+    public Animator anim; // 敌人的动画组件
+
     [Header("Enemy States")]
     public float visionRadius; // 敌人的视野范围半径
     public float shootingRadius; // 敌人的射击范围
@@ -52,6 +55,13 @@ public class Enemy : MonoBehaviour
         if (enemyAgent.SetDestination(playerBody.position)) // 设置导航代理的目标为玩家位置
         {
             // animations // 敌人移动到玩家位置时，播放动画
+            anim.SetBool("Running", true); // 播放敌人奔跑动画
+            anim.SetBool("Shooting", false); // 停止播放敌人射击动画
+        }
+        else
+        {
+            anim.SetBool("Running", false); // 停止播放敌人奔跑动画
+            anim.SetBool("Shooting", false); // 停止播放敌人射击动画
         }
     }
 
@@ -75,6 +85,9 @@ public class Enemy : MonoBehaviour
                     playerBody.playerHitDamage(giveDamage); // 调用玩家的受伤方法，传入敌人造成的伤害值
                 }
             }
+
+            anim.SetBool("Running", false);
+            anim.SetBool("Shooting", true);
         }
 
         previouslyShoot = true;
@@ -104,6 +117,9 @@ public class Enemy : MonoBehaviour
         visionRadius = 0f; // 敌人视野范围半径为0，无法检测玩家
         playerInvisionRadius = false; // 玩家不在敌人的视野范围内
         playerInshootingRadius = false; // 玩家不在敌人的射击范围内
+        anim.SetBool("Die", true);
+        anim.SetBool("Running", false);
+        anim.SetBool("Shooting", false);
 
         // animations // 播放敌人死亡动画
 
@@ -115,13 +131,15 @@ public class Enemy : MonoBehaviour
         Debug.Log("已重生！"); // 打印日志，通知敌人已重生
 
         presentHealth = 120f; // 重生后恢复敌人的生命值
-        enemySpeed = 3f; // 重生后恢复敌人的移动速度
+        enemySpeed = 1f; // 重生后恢复敌人的移动速度
         shootingRadius = 10f; // 重生后恢复敌人的射击范围
         visionRadius = 100f; // 重生后恢复敌人的视野范围半径
         playerInvisionRadius = true; // 玩家在敌人的视野范围内
         playerInshootingRadius = false; // 玩家不在敌人的射击范围内
 
         // animations // 播放敌人重生动画
+        anim.SetBool("Die", false); 
+        anim.SetBool("Running", true);
 
         // spawn point // 设置敌人的重生点位置
         EnemyCharacter.position = Spawn.position; // 将敌人的位置设置为重生点的位置
